@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import PostMessage from '../models/postMessage.js';
 
 // status code: 1xx informational, 2xx succes, 3xx redirection, 4xx client error
@@ -21,3 +22,18 @@ export const createPost = async (req, res) => {
     res.status(409).json({message: e.message});
   }
 };
+
+export const updatePost = async (req, res) => {
+  const { id: _id } = req.params;
+  const post = req.body;
+
+  if(!mongoose.Types.ObjectId.isValid(_id))
+    return res.status(404).send('No Post Found');
+
+  
+  const updatedPost = await PostMessage.findByIdAndUpdate(_id, post, { ...post, _id}, { new: true });
+
+  res.json(updatePost);
+}
+
+
