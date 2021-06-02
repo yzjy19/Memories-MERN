@@ -18,21 +18,23 @@ const Form = ({ currentId, setCurrentId }) => {
       setPostData(post);
   }, [post]);
 
-  const handleSubmit = (e) => {
+  const clear = () => {
+    setCurrentId(0);
+    setPostData({ creator: '', title: '', message: '', tags: '', selectedFile: '' });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if(currentId) {
-      dispatch(updatePost(currentId, postData));
-    } else {
+    if (currentId === 0) {
       dispatch(createPost(postData));
+      clear();
+    } else {
+      dispatch(updatePost(currentId, postData));
+      clear();
     }
-  }
-
-  const clear = () => {
-    setCurrentId(null);
-    setPostData({ creator: '', title:'', message:'', tags:'', selectedFile:''
-  });
-  }
+  };
+  
   return (
     <Paper className={classes.paper}>
       <Form autoComplete="off" noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
